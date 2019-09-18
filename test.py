@@ -1,6 +1,5 @@
 from muon import Body
 from muon import DocType
-from muon import element
 from muon import Head
 from muon import Heading
 from muon import Html
@@ -13,60 +12,7 @@ from muon import Script
 from muon import Title
 
 
-class Document1(HtmlElement):
-
-    def __init__(self, head=None, body=None):
-        self.head = head
-        self.body = body
-
-    def render(self):
-        return [
-            DocType(),
-            Html(
-                children=[
-                    Head(children=self.head),
-                    Body(children=self.body),
-                ],
-            ),
-        ]
-
-
-class Test1(HtmlElement):
-
-    def render(self):
-        return Document1(
-            head=[
-                Link(rel='stylesheet', href='index.scss'),
-                Script(src='index.js'),
-                Title(children='Test'),
-            ],
-            body=[
-                Heading(
-                    classname='heading large',
-                    children='This is a test!',
-                ),
-                Input(
-                    classname=[
-                        'input',
-                        'large',
-                        'simple',
-                    ],
-                    maxlength=30,
-                    readonly=False,
-                    required=True,
-                    style={
-                        'font_family': 'Courier',
-                        'font_size': '20px',
-                    },
-                ),
-                Raw('\'"><'),
-                '\'"><',
-            ],
-        )
-
-
-@html_element
-def Document2(head=None, body=None):
+def document(head, body):
     return [
         DocType(),
         Html(
@@ -78,9 +24,8 @@ def Document2(head=None, body=None):
     ]
 
 
-@html_element
-def Test2():
-    return Document2(
+def test(element):
+    return element(
         head=[
             Link(rel='stylesheet', href='index.scss'),
             Script(src='index.js'),
@@ -109,6 +54,32 @@ def Test2():
             '\'"><',
         ],
     )
+
+
+class Document1(HtmlElement):
+
+    def __init__(self, head=None, body=None):
+        self.head = head
+        self.body = body
+
+    def render(self):
+        return document(self.head, self.body)
+
+
+class Test1(HtmlElement):
+
+    def render(self):
+        return test(Document1)
+
+
+@html_element
+def Document2(head=None, body=None):
+    return document(head, body)
+
+
+@html_element
+def Test2():
+    return test(Document2)
 
 
 if __name__ == '__main__':
