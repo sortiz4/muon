@@ -124,6 +124,22 @@ def _render_style(style):
     return SEMICOLON.join([COLON.join([_kebab(k), v]) for k, v in style.items()])
 
 
+def element(closure):
+    """
+    """
+    def wrapper(**kwargs):
+        return _render_core(closure(**kwargs))
+    return wrapper
+
+
+def html_element(closure):
+    """
+    """
+    def wrapper(**kwargs):
+        return Raw(_render_html(closure(**kwargs)))
+    return wrapper
+
+
 class Raw(str):
     pass
 
@@ -169,10 +185,10 @@ class HtmlElement(Element):
             'attributes': _render_attributes(self.attributes),
         }
         if options['children']:
-            FORMAT = self.FORMAT_B
+            fs = self.FORMAT_B
         else:
-            FORMAT = self.FORMAT_A
-        return Raw(FORMAT.format(**options))
+            fs = self.FORMAT_A
+        return Raw(fs.format(**options))
 
     def __str__(self):
         return _render_html(self.render())
