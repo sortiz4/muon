@@ -16,16 +16,11 @@ STYLE = 'style'
 ALIASES = {'class_name': 'class'}
 
 
-def _convert_css(value):
+def _snake_to_kebab(value):
     """
+    Converts a string from snake case to kebab case.
     """
-    return EMPTY.join([c if c != UNDERSCORE else MINUS for c in value.lower()])
-
-
-def _convert_html(value):
-    """
-    """
-    return EMPTY.join([c for c in value.lower() if c != UNDERSCORE])
+    return value.lower().replace(UNDERSCORE, MINUS)
 
 
 def _escape(value, quote):
@@ -51,7 +46,7 @@ def _escape_children(value):
 def _render_style(style):
     kvs = []
     for k, v in style.items():
-        kvs.append('{}:{}'.format(_convert_css(k), v))
+        kvs.append('{}:{}'.format(_snake_to_kebab(k), v))
     return SEMICOLON.join(kvs)
 
 
@@ -74,7 +69,7 @@ def _render_attributes(attributes):
                 k = ALIASES[k]
 
             # Case convert keys
-            k = _convert_html(k)
+            k = _snake_to_kebab(k)
 
             # Reduce boolean values
             if isinstance(v, bool):
@@ -250,50 +245,3 @@ class Title(HtmlElement):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs, tag='title')
-
-
-class Document(Element):
-
-    def __init__(self, head=None, body=None):
-        self.head = head
-        self.body = body
-
-    def render(self):
-        return [
-            DocType(),
-            Html(
-                children=[
-                    Head(children=self.head),
-                    Body(children=self.body),
-                ],
-            ),
-        ]
-
-
-class Test(Element):
-
-    def render(self):
-        return Document(
-            head=[
-                Link(rel='stylesheet', href='index.scss'),
-                Script(src='index.js'),
-                Title(children='Test'),
-            ],
-            body=[
-                Heading(children='This is a test!'),
-                Input(
-                    style={
-                        'font_family': 'Courier',
-                        'font_size': '20px',
-                    },
-                    read_only=True,
-                    required=False,
-                ),
-                '</FAIL"\'>',
-                Raw('</FAIL>'),
-            ],
-        )
-
-
-if __name__ == '__main__':
-    print(Test())
