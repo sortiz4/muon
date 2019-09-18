@@ -1,9 +1,9 @@
 from muon import Body
 from muon import DocType
-from muon import Element
 from muon import Head
 from muon import Heading
 from muon import Html
+from muon import HtmlElement
 from muon import Input
 from muon import Link
 from muon import Raw
@@ -11,7 +11,7 @@ from muon import Script
 from muon import Title
 
 
-class Document(Element):
+class Document(HtmlElement):
 
     def __init__(self, head=None, body=None):
         self.head = head
@@ -29,7 +29,7 @@ class Document(Element):
         ]
 
 
-class Test(Element):
+class Test(HtmlElement):
 
     def render(self):
         return Document(
@@ -39,17 +39,26 @@ class Test(Element):
                 Title(children='Test'),
             ],
             body=[
-                Heading(children='This is a test!'),
+                Heading(
+                    classname='heading large',
+                    children='This is a test!',
+                ),
                 Input(
+                    classname=[
+                        'input',
+                        'large',
+                        'simple',
+                    ],
+                    maxlength=30,
+                    readonly=False,
+                    required=True,
                     style={
                         'font_family': 'Courier',
                         'font_size': '20px',
                     },
-                    readonly=True,
-                    required=False,
                 ),
-                Raw('</BAD"\'>'),
-                '</BAD"\'>',
+                Raw('\'"><'),
+                '\'"><',
             ],
         )
 
