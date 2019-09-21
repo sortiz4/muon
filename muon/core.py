@@ -1,6 +1,15 @@
 import html
 from collections.abc import Iterable
 
+__all__ = [
+    'DocType',
+    'element',
+    'Element',
+    'html_element',
+    'HtmlElement',
+    'Raw',
+]
+
 # Well-known strings
 EMPTY = ''
 SPACE = '\x20'

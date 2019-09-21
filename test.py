@@ -1,7 +1,7 @@
 from muon import Body
 from muon import DocType
-from muon import H
 from muon import Head
+from muon import Heading
 from muon import Html
 from muon import html_element
 from muon import HtmlElement
@@ -32,7 +32,7 @@ def test(element):
             Title(children='Test'),
         ],
         body=[
-            H(
+            Heading(
                 classname='heading large',
                 children='This is a test!',
             ),
