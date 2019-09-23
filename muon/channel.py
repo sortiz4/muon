@@ -1,10 +1,20 @@
 class Channel:
 
-    def __init__(self, value=None):
-        self._value = value
+    def __init__(self, default=None):
+        self._default = default
 
-    def write(value=None):
-        self._value = value
+    def read(self):
+        try:
+            return self._current
+        except AttributeError:
+            return self._default
 
-    def read():
-        return self._value
+    def write(self, current=None):
+        self._current = current
+        return current
+
+    def delete(self):
+        try:
+            del self._current
+        except AttributeError:
+            pass
