@@ -7,9 +7,9 @@ __all__ = [
 ]
 
 
-def _types(*tags):
+def _add_html_elements(*tags):
     """
-    Generates a map of basic element types.
+    Adds basic HTML elements to this module.
     """
     global __all__
 
@@ -55,7 +55,7 @@ class TextArea(HtmlElement):
         self.FORMAT_A = self.FORMAT_B
 
 
-_types(
+_add_html_elements(
     ('a', 'Anchor'),
     ('abbr', 'Abbreviation'),
     ('address', None),

@@ -28,13 +28,14 @@ ALIASES = {'classname': 'class'}
 
 def _kebab(value):
     """
-    Converts a string to kebab case.
+    Converts a snake case string to kebab case.
     """
     return value.lower().replace(UNDERSCORE, MINUS)
 
 
 def _escape(value, quote):
     """
+    Escapes HTML characters in pure strings (quotes are optional).
     """
     if type(value) is str:
         return html.escape(value, quote)
@@ -43,18 +44,21 @@ def _escape(value, quote):
 
 def _escape_attribute(value):
     """
+    Escapes HTML characters in pure strings (including quotes).
     """
     return _escape(value, True)
 
 
 def _escape_html(value):
     """
+    Escapes HTML characters in pure strings (excluding quotes).
     """
     return _escape(value, False)
 
 
 def _format_attribute(key, value):
     """
+    Safely formats attribute-value pairs.
     """
     if value is not None:
         return '{}="{}"'.format(_escape_attribute(key), _escape_attribute(value))
@@ -63,6 +67,7 @@ def _format_attribute(key, value):
 
 def _render_attributes(attributes):
     """
+    Safely renders attribute-value pairs.
     """
     if attributes and isinstance(attributes, dict):
         entries = []
@@ -99,12 +104,14 @@ def _render_attributes(attributes):
 
 def _render_class(*args):
     """
+    Safely renders a list of class names.
     """
     return SPACE.join([arg for arg in args if isinstance(arg, str)])
 
 
 def _render_core(children):
     """
+    Renders the children of an element.
     """
     if children is None:
         return EMPTY
@@ -117,6 +124,7 @@ def _render_core(children):
 
 def _render_html(children):
     """
+    Renders the children of an HTML element.
     """
     if children is None:
         return EMPTY
@@ -129,12 +137,14 @@ def _render_html(children):
 
 def _render_style(style):
     """
+    Renders the inline style of an HTML element.
     """
     return SEMICOLON.join([COLON.join([_kebab(k), v]) for k, v in style.items()])
 
 
 def element(closure):
     """
+    A decorator for defining functional elements.
     """
     def wrapper(**kwargs):
         return _render_core(closure(**kwargs))
@@ -143,6 +153,7 @@ def element(closure):
 
 def html_element(closure):
     """
+    A decorator for defining functional HTML elements.
     """
     def wrapper(**kwargs):
         return Raw(_render_html(closure(**kwargs)))
