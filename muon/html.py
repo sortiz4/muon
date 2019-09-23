@@ -6,7 +6,56 @@ __all__ = [
     'TextArea',
 ]
 
-TAGS = (
+
+def _types(*tags):
+    """
+    Generates a map of basic element types.
+    """
+    global __all__
+
+    def methods(tag):
+        """
+        Generates a map of methods for a given tag.
+        """
+        def __init__(self, **kwargs):
+            HtmlElement.__init__(self, **kwargs, tag=tag)
+        return {'__init__': __init__}
+
+    # Construct the types
+    types = {}
+    for tag, name in tags:
+        if name is None:
+            name = tag.capitalize()
+        types[name] = type(name, (HtmlElement,), methods(tag))
+
+    # Augment the exports
+    __all__ += [*types.keys()]
+
+    # Update the module
+    globals().update(types)
+
+
+class Heading(HtmlElement):
+
+    def __init__(self, size=1, **kwargs):
+        super().__init__(**kwargs, tag='h{}'.format(size))
+
+
+class Script(HtmlElement):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs, tag='script')
+        self.FORMAT_A = self.FORMAT_B
+
+
+class TextArea(HtmlElement):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs, tag='textarea')
+        self.FORMAT_A = self.FORMAT_B
+
+
+_types(
     ('a', 'Anchor'),
     ('abbr', 'Abbreviation'),
     ('address', None),
@@ -101,9 +150,9 @@ TAGS = (
     ('tbody', 'TableBody'),
     ('td', 'TableCell'),
     ('template', None),
-    ('tfoot', 'TableFooter'),
-    ('th', 'TableHeaderCell'),
-    ('thead', 'TableHeader'),
+    ('tfoot', 'TableFoot'),
+    ('th', 'TableHeadCell'),
+    ('thead', 'TableHead'),
     ('time', None),
     ('title', None),
     ('tr', 'TableRow'),
@@ -114,54 +163,3 @@ TAGS = (
     ('video', None),
     ('wbr', 'WordBreak'),
 )
-
-
-def _types():
-    """
-    """
-    global __all__
-
-    def _methods(tag):
-        """
-        """
-        def __init__(self, **kwargs):
-            HtmlElement.__init__(self, **kwargs, tag=tag)
-
-        #
-        return {'__init__': __init__}
-
-    #
-    types = {}
-    for tag, name in TAGS:
-        if name is None:
-            name = tag.capitalize()
-        types[name] = type(name, (HtmlElement,), _methods(tag))
-    
-    #
-    __all__ += [*types.keys()]
-
-    #
-    return types
-
-
-class Heading(HtmlElement):
-
-    def __init__(self, size=1, **kwargs):
-        super().__init__(**kwargs, tag='h{}'.format(size))
-
-
-class Script(HtmlElement):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs, tag='script')
-        self.FORMAT_A = self.FORMAT_B
-
-
-class TextArea(HtmlElement):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs, tag='textarea')
-        self.FORMAT_A = self.FORMAT_B
-
-
-globals().update(_types())

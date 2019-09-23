@@ -106,25 +106,25 @@ def _render_class(*args):
 def _render_core(children):
     """
     """
-    if isinstance(children, str):
+    if children is None:
+        return EMPTY
+    elif isinstance(children, str):
         return children
-    elif isinstance(children, Element):
-        return str(children)
     elif isinstance(children, Iterable):
         return EMPTY.join(map(_render_core, children))
-    return EMPTY
+    return str(children)
 
 
 def _render_html(children):
     """
     """
-    if isinstance(children, str):
+    if children is None:
+        return EMPTY
+    elif isinstance(children, str):
         return _escape_html(children)
-    elif isinstance(children, Element):
-        return str(children)
     elif isinstance(children, Iterable):
         return EMPTY.join(map(_render_html, children))
-    return EMPTY
+    return str(children)
 
 
 def _render_style(style):
