@@ -9,7 +9,7 @@ __all__ = [
 
 def _add_html_elements(*tags):
     """
-    Adds basic HTML elements to this module.
+    Adds basic HTML element types to this module.
     """
     global __all__
 
