@@ -7,6 +7,7 @@ from muon import html_element
 from muon import HtmlElement
 from muon import Input
 from muon import Link
+from muon import Meta
 from muon import Raw
 from muon import Script
 from muon import Title
