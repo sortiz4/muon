@@ -16,6 +16,7 @@ def document(head, body):
     return [
         DocType(),
         Html(
+            lang='en',
             children=[
                 Head(children=head),
                 Body(children=body),
@@ -24,31 +25,31 @@ def document(head, body):
     ]
 
 
-def test(element):
+def example(element):
     return element(
         head=[
-            Link(rel='stylesheet', href='index.scss'),
-            Script(src='index.js'),
-            Title(children='Test'),
+            Title(children='Example'),
+            Meta(http_equiv='refresh', content='60'),
+            Link(href='favicon.png', rel='icon', type='image/png'),
+            Script(src='index.js', type='application/javascript', defer=True),
         ],
         body=[
             Heading(
                 classname='heading large',
-                children='This is a test!',
+                children='This is a heading',
             ),
             Input(
                 classname=[
                     'input',
                     'large',
-                    'simple',
                 ],
-                maxlength=30,
-                readonly=False,
-                required=True,
                 style={
                     'font_family': 'Courier',
                     'font_size': '20px',
                 },
+                maxlength=30,
+                readonly=False,
+                required=True,
             ),
             Raw('\'"><'),
             '\'"><',
@@ -66,10 +67,10 @@ class Document1(HtmlElement):
         return document(self.head, self.body)
 
 
-class Test1(HtmlElement):
+class Example1(HtmlElement):
 
     def render(self):
-        return test(Document1)
+        return example(Document1)
 
 
 @html_element
@@ -78,10 +79,10 @@ def Document2(head=None, body=None):
 
 
 @html_element
-def Test2():
-    return test(Document2)
+def Example2():
+    return example(Document2)
 
 
 if __name__ == '__main__':
-    print(Test1())
-    print(Test2())
+    print(Example1())
+    print(Example2())

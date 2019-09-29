@@ -67,7 +67,7 @@ def Slot(name=None):
 ```
 
 All HTML tags have been aliased and converted to HTML elements. The full list
-can be seen [here](https://github.com/sortiz4/muon/blob/master/muon/html.py#L58).
+can be seen [here](https://github.com/sortiz4/muon/blob/master/muon/html.py#L38).
 
 Attributes can be passed as named arguments to any HTML element (underscores in
 attribute names will be converted to hyphens). Most attribute values will be
@@ -83,9 +83,6 @@ iterable of strings (all non-strings will be filtered out).
 `style` must be a dictionary. Like attributes, underscores in property names
 will be converted to hyphens.
 
-```python
-```
-
 ### Channels
 Channels can be used to alleviate the repetition associated with passing down
 arguments to deeply nested elements. Channels accept a default value that is
@@ -95,7 +92,6 @@ been deleted.
 ```python
 from muon import Channel
 from muon import html_element
-from muon import HtmlElement
 
 count_channel = Channel(10)
 label_channel = Channel('')
