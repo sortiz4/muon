@@ -10,11 +10,17 @@ class Channel:
             return self._default
 
     def write(self, current=None):
+        try:
+            previous = self._current
+        except AttributeError:
+            previous = self._default
         self._current = current
-        return current
+        return previous
 
     def delete(self):
         try:
+            deleted = self._current
             del self._current
+            return deleted
         except AttributeError:
             pass
