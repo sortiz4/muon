@@ -29,10 +29,12 @@ def document(head, body):
 def example(element):
     return element(
         head=[
+            Meta(charset='utf-8'),
+            Meta(http_equiv='x-ua-compatible', content='ie=edge'),
+            Meta(name='viewport', content='width=device-width, initial-scale=1'),
+            Link(href='/static/favicon.png', rel='icon', type='image/png'),
+            Script(src='/static/index.js', type='application/javascript', defer=True),
             Title(children='Example'),
-            Meta(http_equiv='refresh', content='60'),
-            Link(href='favicon.png', rel='icon', type='image/png'),
-            Script(src='index.js', type='application/javascript', defer=True),
         ],
         body=[
             Heading(
@@ -48,6 +50,7 @@ def example(element):
                     'font_family': 'Courier',
                     'font_size': '20px',
                 },
+                value='This is a value',
                 maxlength=30,
                 readonly=False,
                 required=True,
