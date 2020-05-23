@@ -126,5 +126,5 @@ def view(request):
 ### Example
 A more complete example can be seen [here][2].
 
-[1]: https://github.com/sortiz4/muon/blob/master/muon/html.py#L38 "Tags"
-[2]: https://github.com/sortiz4/muon/blob/master/example.py "Example"
+[1]: https://github.com/sortiz4/muon/blob/master/muon/html.py#L38
+[2]: https://github.com/sortiz4/muon/blob/master/example.py
