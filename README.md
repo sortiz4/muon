@@ -67,7 +67,7 @@ def Slot(name=None):
 ```
 
 All HTML tags have been aliased and converted to HTML elements. The full list
-can be seen [here](https://github.com/sortiz4/muon/blob/master/muon/html.py#L38).
+can be seen [here][1].
 
 Attributes can be passed as named arguments to any HTML element (underscores in
 attribute names will be converted to hyphens). Most attribute values will be
@@ -124,4 +124,7 @@ def view(request):
 ```
 
 ### Example
-A more complete example can be seen [here](https://github.com/sortiz4/muon/blob/master/example.py).
+A more complete example can be seen [here][2].
+
+[1]: https://github.com/sortiz4/muon/blob/master/muon/html.py#L38 "Tags"
+[2]: https://github.com/sortiz4/muon/blob/master/example.py "Example"
