@@ -174,7 +174,6 @@ class Element:
 
 
 class DocType(Element):
-
     FORMAT = '<!DOCTYPE{}>'
 
     def __init__(self, dtd=None):
@@ -189,7 +188,6 @@ class DocType(Element):
 
 
 class HtmlElement(Element):
-
     FORMAT_A = '<{tag}{attributes}/>'
     FORMAT_B = '<{tag}{attributes}>{children}</{tag}>'
 
