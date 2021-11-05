@@ -9,7 +9,7 @@ modularity, and testability.
 
 ### Installation
 Muon requires Python 3 and can be installed through your package manager of
-choice using this GitHub repository. Installation through pip is shown below.
+choice using this GitHub repository. Installation through `pip` is shown below.
 
 ```sh
 $ pip install git+https://github.com/sortiz4/muon.git#egg=muon
