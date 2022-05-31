@@ -83,33 +83,6 @@ iterable of strings (all non-strings will be filtered out).
 `style` must be a dictionary. Like attributes, underscores in property names
 will be converted to hyphens.
 
-### Channels
-Channels can be used to alleviate the repetition associated with passing down
-arguments to deeply nested elements. Channels accept a default value that is
-only used when the channel has not been written to or the previous value has
-been deleted.
-
-```python
-from muon import Channel
-from muon import html_element
-
-count_channel = Channel(10)
-label_channel = Channel('')
-
-
-@html_element
-def Parent(label='Node'):
-    label_channel.write(label)
-    count = count_channel.read()
-    return [Child() for _ in range(count)]
-
-
-@html_element
-def Child():
-    label = label_channel.read()
-    return '<{}>'.format(label)
-```
-
 ### Rendering
 The `render` function is the recommended way to render the root element. If
 Django is installed, this function will return an `HttpResponse`.

@@ -35,7 +35,7 @@ def _kebab(value):
 
 def _escape(value, quote):
     """
-    Escapes HTML characters in pure strings (quotes are optional).
+    Escapes HTML characters in plain strings (quotes are optional).
     """
     if type(value) is str:
         return html.escape(value, quote)
@@ -44,14 +44,14 @@ def _escape(value, quote):
 
 def _escape_attribute(value):
     """
-    Escapes HTML characters in pure strings (including quotes).
+    Escapes HTML characters in plain strings (including quotes).
     """
     return _escape(value, True)
 
 
 def _escape_html(value):
     """
-    Escapes HTML characters in pure strings (excluding quotes).
+    Escapes HTML characters in plain strings (excluding quotes).
     """
     return _escape(value, False)
 
@@ -174,39 +174,40 @@ class Element:
 
 
 class DocType(Element):
-    FORMAT = '<!DOCTYPE{}>'
 
     def __init__(self, dtd=None):
         self.dtd = dtd
 
     def render(self):
-        if isinstance(self.dtd, str):
-            dtd = _escape_html(self.dtd)
-        else:
-            dtd = 'html'
-        return self.FORMAT.format(SPACE + dtd)
+        def get_dtd():
+            if isinstance(self.dtd, str):
+                return _escape_html(self.dtd)
+            return 'html'
+
+        return '<!DOCTYPE{}>'.format(SPACE + get_dtd())
 
 
 class HtmlElement(Element):
-    FORMAT_A = '<{tag}{attributes}/>'
-    FORMAT_B = '<{tag}{attributes}>{children}</{tag}>'
 
-    def __init__(self, tag=None, children=None, **attributes):
+    def __init__(self, tag=None, void=False, children=None, **attributes):
         self.tag = tag
+        self.void = void
         self.children = children
         self.attributes = attributes
 
     def render(self):
+        def get_format():
+            if self.void:
+                return '<{tag}{attributes}/>'
+            return '<{tag}{attributes}>{children}</{tag}>'
+
         options = {
             'tag': self.tag,
             'children': _render_html(self.children),
             'attributes': _render_attributes(self.attributes),
         }
-        if options['children']:
-            fs = self.FORMAT_B
-        else:
-            fs = self.FORMAT_A
-        return Raw(fs.format(**options))
+
+        return Raw(get_format().format(**options))
 
     def __str__(self):
         return _render_html(self.render())
