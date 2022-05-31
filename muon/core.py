@@ -58,25 +58,51 @@ def _escape_html(value):
     return _escape(value, False)
 
 
-def _render_attribute(key, value):
+def _render_core(children):
     """
-    Safely renders an attribute-value pair.
+    Renders the children of an element.
+    """
+    if children is None:
+        return EMPTY
+    elif isinstance(children, str):
+        return children
+    elif isinstance(children, Iterable):
+        return EMPTY.join(map(_render_core, children))
+    return str(children)
+
+
+def _render_html(children):
+    """
+    Safely renders the children of an HTML element.
+    """
+    if children is None:
+        return EMPTY
+    elif isinstance(children, str):
+        return _escape_html(children)
+    elif isinstance(children, Iterable):
+        return EMPTY.join(map(_render_html, children))
+    return str(children)
+
+
+def _render_html_attribute(key, value):
+    """
+    Safely renders an attribute-value pair of an HTML element.
     """
     if value is not None:
         return '{}="{}"'.format(_escape_attribute(key), _escape_attribute(value))
     return _escape_attribute(key)
 
 
-def _render_attributes(attributes):
+def _render_html_attributes(attributes):
     """
-    Safely renders attribute-value pairs.
+    Safely renders attribute-value pairs of an HTML element.
     """
     if attributes and isinstance(attributes, dict):
         def reduce_attributes():
             return [render_attribute(k, v) for k, v in attributes.items() if not should_skip(v)]
 
         def render_attribute(key, value):
-            return _render_attribute(render_attribute_key(key), render_attribute_value(key, value))
+            return _render_html_attribute(render_attribute_key(key), render_attribute_value(key, value))
 
         def render_attribute_key(key):
             # Map and case converts keys
@@ -86,12 +112,12 @@ def _render_attributes(attributes):
             if key == CLASS:
                 # Reduce class values
                 if not isinstance(value, str) and isinstance(value, Iterable):
-                    return _render_class(*value)
+                    return _render_html_class(*value)
 
             elif key == STYLE:
                 # Reduce style values
                 if isinstance(value, dict):
-                    return _render_style(value)
+                    return _render_html_style(value)
 
             # Reduce boolean values
             if isinstance(value, bool):
@@ -108,40 +134,14 @@ def _render_attributes(attributes):
     return EMPTY
 
 
-def _render_class(*args):
+def _render_html_class(*names):
     """
-    Safely renders a list of class names.
+    Renders the list of class names of an HTML element.
     """
-    return SPACE.join([arg for arg in args if isinstance(arg, str)])
+    return SPACE.join([name for name in names if isinstance(name, str)])
 
 
-def _render_core(children):
-    """
-    Renders the children of an element.
-    """
-    if children is None:
-        return EMPTY
-    elif isinstance(children, str):
-        return children
-    elif isinstance(children, Iterable):
-        return EMPTY.join(map(_render_core, children))
-    return str(children)
-
-
-def _render_html(children):
-    """
-    Renders the children of an HTML element.
-    """
-    if children is None:
-        return EMPTY
-    elif isinstance(children, str):
-        return _escape_html(children)
-    elif isinstance(children, Iterable):
-        return EMPTY.join(map(_render_html, children))
-    return str(children)
-
-
-def _render_style(style):
+def _render_html_style(style):
     """
     Renders the inline style of an HTML element.
     """
@@ -210,7 +210,7 @@ class HtmlElement(Element):
         options = {
             'tag': self.tag,
             'children': _render_html(self.children),
-            'attributes': _render_attributes(self.attributes),
+            'attributes': _render_html_attributes(self.attributes),
         }
 
         return Raw(get_format().format(**options))
