@@ -23,7 +23,9 @@ CLASS = 'class'
 STYLE = 'style'
 
 # Well-known attribute aliases
-ALIASES = {'classes': 'class'}
+ALIASES = {
+    'classes': 'class',
+}
 
 
 def _kebab(value):
@@ -56,9 +58,9 @@ def _escape_html(value):
     return _escape(value, False)
 
 
-def _format_attribute(key, value):
+def _render_attribute(key, value):
     """
-    Safely formats attribute-value pairs.
+    Safely renders an attribute-value pair.
     """
     if value is not None:
         return '{}="{}"'.format(_escape_attribute(key), _escape_attribute(value))
@@ -70,35 +72,39 @@ def _render_attributes(attributes):
     Safely renders attribute-value pairs.
     """
     if attributes and isinstance(attributes, dict):
-        entries = []
-        for k, v in attributes.items():
-            # Map aliased keys
-            if k in ALIASES:
-                k = ALIASES[k]
+        def reduce_attributes():
+            return [render_attribute(k, v) for k, v in attributes.items() if not should_skip(v)]
 
-            # Case convert keys
-            k = _kebab(k)
+        def render_attribute(key, value):
+            return _render_attribute(render_attribute_key(key), render_attribute_value(key, value))
 
-            if k == CLASS:
+        def render_attribute_key(key):
+            # Map and case converts keys
+            return _kebab(ALIASES.get(key, key))
+
+        def render_attribute_value(key, value):
+            if key == CLASS:
                 # Reduce class values
-                if not isinstance(v, str) and isinstance(v, Iterable):
-                    v = _render_class(*v)
+                if not isinstance(value, str) and isinstance(value, Iterable):
+                    return _render_class(*value)
 
-            elif k == STYLE:
+            elif key == STYLE:
                 # Reduce style values
-                if isinstance(v, dict):
-                    v = _render_style(v)
+                if isinstance(value, dict):
+                    return _render_style(value)
 
             # Reduce boolean values
-            if isinstance(v, bool):
-                if v:
-                    v = None
-                else:
-                    continue
+            if isinstance(value, bool):
+                if value:
+                    return None
 
-            # Format the attribute
-            entries.append(_format_attribute(k, v))
-        return SPACE + SPACE.join(entries)
+            # Nothing to do
+            return value
+
+        def should_skip(value):
+            return isinstance(value, bool) and not value
+
+        return SPACE + SPACE.join(reduce_attributes())
     return EMPTY
 
 
