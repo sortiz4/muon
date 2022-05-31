@@ -23,7 +23,7 @@ CLASS = 'class'
 STYLE = 'style'
 
 # Well-known attribute aliases
-ALIASES = {'classname': 'class'}
+ALIASES = {'classes': 'class'}
 
 
 def _kebab(value):

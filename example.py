@@ -38,11 +38,11 @@ def example(element):
         ],
         body=[
             Heading(
-                classname='heading large',
+                classes='heading',
                 children='This is a heading',
             ),
             Input(
-                classname=[
+                classes=[
                     'input',
                     'large',
                 ],

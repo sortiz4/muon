@@ -77,7 +77,7 @@ representation. However, three special attributes exist...
 `children` represents the children of an element and must match the return
 signature of an element.
 
-`classname` will appear as `class` on elements and must be a string or an
+`classes` will appear as `class` on elements and must be a string or an
 iterable of strings (all non-strings will be filtered out).
 
 `style` must be a dictionary. Like attributes, underscores in property names
