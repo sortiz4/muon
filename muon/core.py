@@ -99,10 +99,10 @@ def _render_html_attributes(attributes):
     """
     if attributes and isinstance(attributes, dict):
         def reduce_attributes():
-            return [render_attribute(k, v) for k, v in attributes.items() if not should_skip(v)]
+            return [render_attribute(render_attribute_key(k), v) for k, v in attributes.items() if not should_skip(v)]
 
         def render_attribute(key, value):
-            return _render_html_attribute(render_attribute_key(key), render_attribute_value(key, value))
+            return _render_html_attribute(key, render_attribute_value(key, value))
 
         def render_attribute_key(key):
             # Map and case converts keys

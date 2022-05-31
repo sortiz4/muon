@@ -11,22 +11,19 @@ def _add_html_elements(*tags):
     """
     global __all__
 
-    def create_methods(tag, void):
-        """
-        Creates a map of methods for a given tag.
-        """
+    def get_methods(tag, void):
         def __init__(self, **kwargs):
             HtmlElement.__init__(self, **kwargs, tag=tag, void=void)
         return {'__init__': __init__}
 
-    # Construct the types
-    types = {}
-    for tag, name, void in tags:
-        if name is None:
-            name = tag.capitalize()
-        types[name] = type(name, (HtmlElement,), create_methods(tag, void))
+    def get_types():
+        for tag, name, void in tags:
+            yield type(name if name is not None else tag.capitalize(), (HtmlElement,), get_methods(tag, void))
 
-    # Augment the exports
+    # Construct the types
+    types = {type.__name__: type for type in get_types()}
+
+    # Update the exports
     __all__ += [*types.keys()]
 
     # Update the module
