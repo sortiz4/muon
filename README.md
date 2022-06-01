@@ -1,11 +1,11 @@
 # Muon
 Muon is a composable text generation framework designed to replace or
-supplement traditional templating engines and improves on traditional
-issues such as performance, readability, modularity, and testability.
+supplement traditional templating engines and improves on traditional issues
+such as performance, readability, modularity, and testability.
 
 ## Installation
-Muon can be installed through your package manager of choice using this
-GitHub repository. Installation through `pip` is shown below as an example.
+Muon can be installed through your package manager of choice using this GitHub
+repository. Installation through `pip` is shown below as an example.
 
 ```sh
 $ pip install git+https://github.com/sortiz4/muon.git#egg=muon
@@ -70,14 +70,11 @@ attribute names will be converted to hyphens). Most attribute values will be
 converted into a string or, in the case of booleans, reduced to a simpler
 representation. However, three special attributes exist...
 
-`children` represents the children of an element and must match the return
-type of an element.
-
-`classes` will appear as `class` on elements and must be a string or an
-iterable of strings (non-strings will be filtered out).
-
-`style` must be a dictionary. Like attributes, underscores in property names
-will be converted to hyphens.
+`children` represents the children of an element and must match the return type
+of an element. `classes` will appear as `class` on elements and must be a
+string or an iterable of strings (non-strings will be filtered out). `style`
+must be a dictionary. Like attributes, underscores in property names will be
+converted to hyphens.
 
 ## Rendering
 The `render` function is the recommended way to render the root element. If
