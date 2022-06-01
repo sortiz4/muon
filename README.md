@@ -92,5 +92,5 @@ def view(request):
 ## Example
 A more complete example can be seen [here][2].
 
-[1]: https://github.com/sortiz4/muon/blob/master/muon/html.py
+[1]: https://github.com/sortiz4/muon/blob/master/muon/core.py#L258
 [2]: https://github.com/sortiz4/muon/blob/master/example.py
