@@ -1,23 +1,19 @@
 # Muon
-Muon is a composable text generation framework designed to substitute or
-supplement traditional templating engines with vanilla Python. This approach
-eliminates the overhead associated with parsing (along with all ambiguities
-therein) and improves on common issues such as performance, readability,
-modularity, and testability.
+Muon is a composable text generation framework designed to replace or
+supplement traditional templating engines and improves on traditional
+issues such as performance, readability, modularity, and testability.
 
-# Usage
-
-### Installation
-Muon requires Python 3 and can be installed through your package manager of
-choice using this GitHub repository. Installation through `pip` is shown below.
+## Installation
+Muon can be installed through your package manager of choice using this
+GitHub repository. Installation through `pip` is shown below as an example.
 
 ```sh
 $ pip install git+https://github.com/sortiz4/muon.git#egg=muon
 ```
 
-### Elements
+## Elements
 The simplest type in Muon is an element. Elements can defined by extending an
-`Element` and overriding it's render method, or decorating a function with
+`Element` and overriding it's `render` method, or decorating a function with
 `element`. Elements must return an element, a string, an iterable, or `None`.
 
 ```python
@@ -75,15 +71,15 @@ converted into a string or, in the case of booleans, reduced to a simpler
 representation. However, three special attributes exist...
 
 `children` represents the children of an element and must match the return
-signature of an element.
+type of an element.
 
 `classes` will appear as `class` on elements and must be a string or an
-iterable of strings (all non-strings will be filtered out).
+iterable of strings (non-strings will be filtered out).
 
 `style` must be a dictionary. Like attributes, underscores in property names
 will be converted to hyphens.
 
-### Rendering
+## Rendering
 The `render` function is the recommended way to render the root element. If
 Django is installed, this function will return an `HttpResponse`.
 
@@ -96,8 +92,8 @@ def view(request):
     return render(Document)
 ```
 
-### Example
+## Example
 A more complete example can be seen [here][2].
 
-[1]: https://github.com/sortiz4/muon/blob/master/muon/html.py#L38
+[1]: https://github.com/sortiz4/muon/blob/master/muon/html.py
 [2]: https://github.com/sortiz4/muon/blob/master/example.py
