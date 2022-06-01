@@ -9,7 +9,6 @@ setup(
     url='https://github.com/sortiz4/muon',
     packages=[
         'muon',
-        'muon.channel',
         'muon.core',
         'muon.html',
         'muon.shortcuts',
