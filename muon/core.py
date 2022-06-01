@@ -1,5 +1,6 @@
 import html
 from collections.abc import Iterable
+from functools import wraps
 
 __all__ = [
     'DocType',
@@ -98,17 +99,11 @@ def _render_html_attributes(attributes):
     Safely renders attribute-value pairs of an HTML element.
     """
     if attributes and isinstance(attributes, dict):
-        def reduce_attributes():
-            return [render_attribute(render_attribute_key(k), v) for k, v in attributes.items() if not should_skip(v)]
-
-        def render_attribute(key, value):
-            return _render_html_attribute(key, render_attribute_value(key, value))
-
-        def render_attribute_key(key):
+        def map_key(key):
             # Map and case converts keys
             return _kebab(ALIASES.get(key, key))
 
-        def render_attribute_value(key, value):
+        def map_value(key, value):
             if key == CLASS:
                 # Reduce class values
                 if not isinstance(value, str) and isinstance(value, Iterable):
@@ -126,6 +121,12 @@ def _render_html_attributes(attributes):
 
             # Nothing to do
             return value
+
+        def reduce_attributes():
+            return [render_attribute(map_key(k), v) for k, v in attributes.items() if not should_skip(v)]
+
+        def render_attribute(key, value):
+            return _render_html_attribute(key, map_value(key, value))
 
         def should_skip(value):
             return isinstance(value, bool) and not value
@@ -148,21 +149,23 @@ def _render_html_style(style):
     return SEMICOLON.join([COLON.join([_kebab(k), v]) for k, v in style.items()])
 
 
-def element(closure):
+def element(callback):
     """
     A decorator for defining functional elements.
     """
+    @wraps(callback)
     def wrapper(**kwargs):
-        return _render_core(closure(**kwargs))
+        return _render_core(callback(**kwargs))
     return wrapper
 
 
-def html_element(closure):
+def html_element(callback):
     """
     A decorator for defining functional HTML elements.
     """
+    @wraps(callback)
     def wrapper(**kwargs):
-        return Raw(_render_html(closure(**kwargs)))
+        return Raw(_render_html(callback(**kwargs)))
     return wrapper
 
 
