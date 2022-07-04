@@ -9,11 +9,13 @@ from muon import Input
 from muon import Link
 from muon import Meta
 from muon import Raw
+from muon import Renderable
 from muon import Script
 from muon import Title
+from typing import Callable
 
 
-def document(head, body):
+def document(head: Renderable, body: Renderable) -> Renderable:
     return [
         DocType(),
         Html(
@@ -26,7 +28,7 @@ def document(head, body):
     ]
 
 
-def example(element):
+def example(element: Callable[..., Renderable]) -> Renderable:
     return element(
         head=[
             Meta(charset='utf-8'),
@@ -63,27 +65,27 @@ def example(element):
 
 class Document1(HtmlElement):
 
-    def __init__(self, head=None, body=None):
+    def __init__(self, head: Renderable = None, body: Renderable = None) -> None:
         self.head = head
         self.body = body
 
-    def render(self):
+    def render(self) -> Renderable:
         return document(self.head, self.body)
 
 
 class Example1(HtmlElement):
 
-    def render(self):
+    def render(self) -> Renderable:
         return example(Document1)
 
 
 @html_element
-def Document2(head=None, body=None):
+def Document2(head: Renderable = None, body: Renderable = None) -> Renderable:
     return document(head, body)
 
 
 @html_element
-def Example2():
+def Example2() -> Renderable:
     return example(Document2)
 
 

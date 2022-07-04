@@ -1,12 +1,17 @@
+from muon.core import Renderable
+from typing import Any
+from typing import Callable
+
 try:
     from django.http import HttpResponse
 except ImportError:
-    HttpResponse = lambda e: str(e) if not isinstance(e, str) else e
+    def HttpResponse(value: Any) -> str:
+        return str(value) if not isinstance(value, str) else value
 
 __all__ = [
     'render',
 ]
 
 
-def render(element, **kwargs):
+def render(element: Callable[..., Renderable], **kwargs: Any) -> HttpResponse:
     return HttpResponse(element(**kwargs))

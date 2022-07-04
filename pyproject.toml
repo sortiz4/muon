@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "muon"
+version = "0.0.5"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "~3.10"
+
+[tool.poetry.dev-dependencies]
+flake8 = "~4.0"
+mypy = "~0.961"
+
+[tool.mypy]
+incremental = false
+disable_error_code = ["import"]
+namespace_packages = true
+disallow_untyped_defs = true
+explicit_package_bases = true

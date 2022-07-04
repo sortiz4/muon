@@ -5,10 +5,10 @@ such as performance, readability, modularity, and testability.
 
 ## Installation
 Muon can be installed through your package manager of choice using this GitHub
-repository. Installation through `pip` is shown below as an example.
+repository. Installation through `poetry` is shown below as an example.
 
 ```sh
-$ pip install git+https://github.com/sortiz4/muon.git#egg=muon
+$ poetry add git+https://github.com/sortiz4/muon.git
 ```
 
 ## Elements
@@ -19,20 +19,21 @@ The simplest type in Muon is an element. Elements can defined by extending an
 ```python
 from muon import element
 from muon import Element
+from muon import Renderable
 
 
 class Key(Element):
 
-    def __init__(self, name=None):
+    def __init__(self, name: str | None = None) -> None:
         self.name = name
 
-    def render(self):
+    def render(self) -> Renderable:
         if self.name is not None:
             return '[[{}]]'.format(self.name)
 
 
 @element
-def Key(name=None):
+def Key(name: str | None = None) -> Renderable:
     if name is not None:
         return '[[{}]]'.format(name)
 ```
@@ -44,20 +45,21 @@ generating HTML documents.
 ```python
 from muon import html_element
 from muon import HtmlElement
+from muon import Renderable
 
 
 class Slot(HtmlElement):
 
-    def __init__(self, name=None):
+    def __init__(self, name: str | None = None) -> None:
         self.name = name
 
-    def render(self):
+    def render(self) -> Renderable:
         if self.name is not None:
             return '<{}>'.format(self.name)
 
 
 @html_element
-def Slot(name=None):
+def Slot(name: str | None = None) -> Renderable:
     if name is not None:
         return '<{}>'.format(name)
 ```
@@ -81,16 +83,18 @@ The `render` function is the recommended way to render the root element. If
 Django is installed, this function will return an `HttpResponse`.
 
 ```python
+from app.templates import Document
+from django.http import HttpRequest
+from django.http import HttpResponse
 from muon import render
-from templates import Document
 
 
-def view(request):
+def view(request: HttpRequest) -> HttpResponse:
     return render(Document)
 ```
 
 ## Example
 A more complete example can be seen [here][2].
 
-[1]: https://github.com/sortiz4/muon/blob/master/muon/core.py#L258
+[1]: https://github.com/sortiz4/muon/blob/master/muon/core.py#L22
 [2]: https://github.com/sortiz4/muon/blob/master/example.py
