@@ -96,5 +96,5 @@ def view(request: HttpRequest) -> HttpResponse:
 ## Example
 A more complete example can be seen [here][2].
 
-[1]: https://github.com/sortiz4/muon/blob/master/muon/core.py#L22
+[1]: https://github.com/sortiz4/muon/blob/master/muon/elements.py#L24
 [2]: https://github.com/sortiz4/muon/blob/master/example.py
