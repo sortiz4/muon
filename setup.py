@@ -7,10 +7,5 @@ setup(
     description='A text generation framework.',
     author='Steven Ortiz',
     url='https://github.com/sortiz4/muon',
-    packages=[
-        'muon',
-        'muon.core',
-        'muon.elements',
-        'muon.shortcuts',
-    ],
+    packages=['muon'],
 )
