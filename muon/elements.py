@@ -149,14 +149,14 @@ STYLE = 'style'
 ALIASES = {'classes': CLASS}
 
 
-def _snake_to_kebab(value: str) -> str:
+def snake_to_kebab(value: str) -> str:
     """
     Converts a snake case string to kebab case.
     """
     return value.lower().replace(UNDERSCORE, MINUS)
 
 
-def _escape(value: Any, quote: bool) -> Any:
+def escape(value: Any, quote: bool) -> Any:
     """
     Escapes HTML characters in plain strings (quotes are optional).
     """
@@ -165,21 +165,21 @@ def _escape(value: Any, quote: bool) -> Any:
     return value
 
 
-def _escape_attribute(value: Any) -> Any:
+def escape_attribute(value: Any) -> Any:
     """
     Escapes HTML characters in plain strings (including quotes).
     """
-    return _escape(value, True)
+    return escape(value, True)
 
 
-def _escape_html(value: str) -> str:
+def escape_html(value: str) -> str:
     """
     Escapes HTML characters in plain strings (excluding quotes).
     """
-    return _escape(value, False)
+    return escape(value, False)
 
 
-def _render_core(children: Renderable) -> str:
+def render_core(children: Renderable) -> str:
     """
     Renders the children of an element.
     """
@@ -188,51 +188,51 @@ def _render_core(children: Renderable) -> str:
     elif isinstance(children, str):
         return children
     elif isinstance(children, Iterable):
-        return EMPTY.join(map(_render_core, children))
+        return EMPTY.join(map(render_core, children))
     return str(children)
 
 
-def _render_html(children: Renderable) -> str:
+def render_html(children: Renderable) -> str:
     """
     Safely renders the children of an HTML element.
     """
     if children is None:
         return EMPTY
     elif isinstance(children, str):
-        return _escape_html(children)
+        return escape_html(children)
     elif isinstance(children, Iterable):
-        return EMPTY.join(map(_render_html, children))
+        return EMPTY.join(map(render_html, children))
     return str(children)
 
 
-def _render_html_attribute(key: str, value: Any) -> str:
+def render_html_attribute(key: str, value: Any) -> str:
     """
     Safely renders an attribute-value pair of an HTML element.
     """
     if value is not None:
-        return '{}="{}"'.format(_escape_attribute(key), _escape_attribute(value))
-    return _escape_attribute(key)
+        return '{}="{}"'.format(escape_attribute(key), escape_attribute(value))
+    return escape_attribute(key)
 
 
-def _render_html_attributes(attributes: Mapping[str, Any]) -> str:
+def render_html_attributes(attributes: Mapping[str, Any]) -> str:
     """
     Safely renders attribute-value pairs of an HTML element.
     """
     if attributes and isinstance(attributes, dict):
         def map_key(key: str) -> str:
             # Map and case converts keys
-            return _snake_to_kebab(ALIASES.get(key, key))
+            return snake_to_kebab(ALIASES.get(key, key))
 
         def map_value(key: str, value: Any) -> Any:
             if key == CLASS:
                 # Reduce class values
                 if not isinstance(value, str) and isinstance(value, Iterable):
-                    return _render_html_class(*value)
+                    return render_html_class(*value)
 
             elif key == STYLE:
                 # Reduce style values
                 if isinstance(value, dict):
-                    return _render_html_style(value)
+                    return render_html_style(value)
 
             # Reduce boolean values
             if isinstance(value, bool):
@@ -246,7 +246,7 @@ def _render_html_attributes(attributes: Mapping[str, Any]) -> str:
             return [render_attribute(map_key(k), v) for k, v in attributes.items() if not should_skip(v)]
 
         def render_attribute(key: str, value: Any) -> str:
-            return _render_html_attribute(key, map_value(key, value))
+            return render_html_attribute(key, map_value(key, value))
 
         def should_skip(value: Any) -> bool:
             return isinstance(value, bool) and not value
@@ -255,18 +255,18 @@ def _render_html_attributes(attributes: Mapping[str, Any]) -> str:
     return EMPTY
 
 
-def _render_html_class(*names: Any) -> str:
+def render_html_class(*names: Any) -> str:
     """
     Renders the list of class names of an HTML element.
     """
     return SPACE.join([name for name in names if isinstance(name, str)])
 
 
-def _render_html_style(style: Mapping[str, Any]) -> str:
+def render_html_style(style: Mapping[str, Any]) -> str:
     """
     Renders the inline style of an HTML element.
     """
-    return SEMICOLON.join([COLON.join([_snake_to_kebab(k), v]) for k, v in style.items()])
+    return SEMICOLON.join([COLON.join([snake_to_kebab(k), v]) for k, v in style.items()])
 
 
 def element(callback: Callable[..., Renderable]) -> Callable[..., str]:
@@ -275,7 +275,7 @@ def element(callback: Callable[..., Renderable]) -> Callable[..., str]:
     """
     @wraps(callback)
     def wrapper(**kwargs: Any) -> str:
-        return _render_core(callback(**kwargs))
+        return render_core(callback(**kwargs))
     return wrapper
 
 
@@ -285,7 +285,7 @@ def html_element(callback: Callable[..., Renderable]) -> Callable[..., str]:
     """
     @wraps(callback)
     def wrapper(**kwargs: Any) -> str:
-        return Raw(_render_html(callback(**kwargs)))
+        return Raw(render_html(callback(**kwargs)))
     return wrapper
 
 
@@ -299,7 +299,7 @@ class Element:
         return None
 
     def __str__(self) -> str:
-        return _render_core(self.render())
+        return render_core(self.render())
 
 
 class DocType(Element):
@@ -310,7 +310,7 @@ class DocType(Element):
     def render(self) -> Renderable:
         def get_dtd() -> str:
             if isinstance(self.dtd, str):
-                return _escape_html(self.dtd)
+                return escape_html(self.dtd)
             return 'html'
 
         return '<!DOCTYPE{}>'.format(SPACE + get_dtd())
@@ -332,14 +332,14 @@ class HtmlElement(Element):
 
         options = {
             'tag': self.tag,
-            'children': _render_html(self.children),
-            'attributes': _render_html_attributes(self.attributes),
+            'children': render_html(self.children),
+            'attributes': render_html_attributes(self.attributes),
         }
 
         return Raw(get_format().format(**options))
 
     def __str__(self) -> str:
-        return _render_html(self.render())
+        return render_html(self.render())
 
 
 class Anchor(HtmlElement):
