@@ -276,6 +276,7 @@ def element(callback: Callable[..., Renderable]) -> Callable[..., str]:
     @wraps(callback)
     def wrapper(**kwargs: Any) -> str:
         return render_core(callback(**kwargs))
+
     return wrapper
 
 
@@ -286,6 +287,7 @@ def html_element(callback: Callable[..., Renderable]) -> Callable[..., str]:
     @wraps(callback)
     def wrapper(**kwargs: Any) -> str:
         return Raw(render_html(callback(**kwargs)))
+
     return wrapper
 
 
