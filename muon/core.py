@@ -17,4 +17,4 @@ class Node(Protocol):
         pass
 
 
-Renderable = str | Node | Iterable[str | Node] | None
+Renderable = str | Node | None | Iterable[str | Node | None]

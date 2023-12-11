@@ -8,8 +8,8 @@ from muon import HtmlElement
 from muon import Input
 from muon import Link
 from muon import Meta
-from muon import Raw
 from muon import Renderable
+from muon import Safe
 from muon import Script
 from muon import Title
 from typing import Callable
@@ -57,7 +57,7 @@ def example(element: Callable[..., Renderable]) -> Renderable:
                 readonly=False,
                 required=True,
             ),
-            Raw('\'"><'),
+            Safe('\'"><'),
             '\'"><',
         ],
     )
