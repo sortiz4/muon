@@ -1,7 +1,9 @@
 # Muon
-Muon is a composable text generation framework designed to replace traditional
-templating engines and improve common issues such as performance, readability,
-modularity, and testability.
+Muon is a modern Python framework for text generation that reimagines template
+rendering. Designed as a composable and intuitive alternative to traditional
+HTML templates, Muon simplifies the process of creating, reading, and testing
+dynamic content. With Muon, developers can build modular and testable text
+components, making your codebase more maintainable and easier to reason about.
 
 ## Installation
 Muon can be installed through your package manager of choice using this GitHub
